@@ -3,12 +3,10 @@ import requests
 import json
 
 def getDataset():
-    path="/home/guzman/Documentos/pipelines/Input/who_suicide_statistics.csv"
+    path="../../Input/who_suicide_statistics.csv"
     data=pd.read_csv(path)
-
     # Getting suicides in 2015
     data=data.loc[data['year']==2015]
-
     # Grouping by country
     data=data.groupby(['country','year'],as_index=False)['suicides_no','population'].sum()
     return data
@@ -34,37 +32,24 @@ def getApi():
 def cleaning_merging():
     final_country=[]
     final_country_api=[]
-    
     per_capita=getApi()
     data=getDataset()
-
     country_api=(set(per_capita['country']))
     country_api=list(country_api)
     country_api=sorted(country_api)
-    
     country=(set(data['country']))
     country=list(country)
     country=sorted(country)
-    
     for e in country_api:
         if e not in country:
             final_country_api.append(e)
-
     for e in country:
         if e not in country_api:
             final_country.append(e)
-
     for e in final_country:
-        data=data[data['country']!=e]
-    
+        data=data[data['country']!=e] 
     for e in final_country_api:
         per_capita=per_capita[per_capita['country']!=e]
-    
     per_capita=per_capita['value']
-    
     data['per capita']=per_capita
-    
     return data
-
-    print(getDataset())
-    print(getApi())
