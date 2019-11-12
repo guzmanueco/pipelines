@@ -9,7 +9,7 @@ def sorting_suicides():
     data=dataset.cleaning_merging()
     return data.sort_values(by='suicides_no',ascending=False)
 
-def listing_countries(lst):
+def listing_countries():
     data=(dataset.cleaning_merging())
     countries=list(data['country'])
     return countries
